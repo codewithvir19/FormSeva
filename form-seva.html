@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form Seva - Online Form Filling Services</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --saffron: #FF6B00;
+    --saffron-light: #FFF3EA;
+    --saffron-mid: #FFB366;
+    --green: #138808;
+    --green-light: #E6F4E6;
+    --blue: #0A3D91;
+    --blue-light: #E8EEF8;
+    --gold: #D4A017;
+    --text-dark: #1A1A2E;
+    --text-mid: #4A4A6A;
+    --text-light: #7A7A9A;
+    --bg: #FAFAF8;
+    --white: #FFFFFF;
+    --border: #E0E0F0;
+    --shadow: 0 4px 24px rgba(10,61,145,0.10);
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--white);
+    border-bottom: 3px solid var(--saffron);
+    position: sticky; top: 0; z-index: 100;
+    padding: 0 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.5rem; font-weight: 800; color: var(--saffron);
+    text-decoration: none;
+  }
+  .logo span { color: var(--blue); }
+  .logo-icon {
+    width: 38px; height: 38px; background: var(--saffron);
+    border-radius: 8px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+  }
+  nav ul { list-style: none; display: flex; gap: 28px; }
+  nav ul a {
+    text-decoration: none; color: var(--text-mid);
+    font-size: 0.9rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  nav ul a:hover { color: var(--saffron); }
+  .nav-cta {
+    background: var(--saffron); color: var(--white) !important;
+    padding: 8px 20px; border-radius: 24px; font-weight: 600 !important;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1) !important;
+    position: relative; overflow: hidden;
+  }
+  .nav-cta::after {
+    content: ''; position: absolute;
+    inset: 0; background: rgba(255,255,255,0.2);
+    transform: translateX(-100%) skewX(-15deg);
+    transition: transform 0.4s ease;
+  }
+  .nav-cta:hover::after { transform: translateX(100%) skewX(-15deg); }
+  .nav-cta:hover { background: #e05500 !important; transform: translateY(-2px) scale(1.05) !important; box-shadow: 0 6px 18px rgba(255,107,0,0.4) !important; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0A3D91 0%, #1A5FC8 50%, #0A3D91 100%);
+    padding: 70px 5% 80px;
+    position: relative; overflow: hidden;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,107,0,0.2); color: #FFB366;
+    font-size: 0.8rem; font-weight: 600; letter-spacing: 1px;
+    padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(255,107,0,0.3);
+    margin-bottom: 20px; text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 3rem; font-weight: 800; line-height: 1.15;
+    color: var(--white); margin-bottom: 18px;
+  }
+  .hero h1 em {
+    font-style: normal; color: var(--saffron-mid);
+    display: block;
+  }
+  .hero p {
+    color: rgba(255,255,255,0.82); font-size: 1.05rem;
+    max-width: 480px; margin-bottom: 32px;
+  }
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--saffron); color: var(--white);
+    padding: 13px 28px; border-radius: 30px;
+    font-weight: 700; font-size: 1rem; text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1); border: 2px solid var(--saffron);
+    display: inline-flex; align-items: center; gap: 8px;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::after {
+    content: ''; position: absolute;
+    inset: 0; background: rgba(255,255,255,0.18);
+    transform: translateX(-100%) skewX(-15deg);
+    transition: transform 0.4s ease;
+  }
+  .btn-primary:hover::after { transform: translateX(100%) skewX(-15deg); }
+  .btn-primary:hover { background: #e05500; border-color: #e05500; transform: translateY(-3px) scale(1.04); box-shadow: 0 10px 28px rgba(255,107,0,0.45); letter-spacing: 0.5px; }
+  .btn-primary:active { transform: scale(0.97); }
+
+  .btn-secondary {
+    background: transparent; color: var(--white);
+    padding: 13px 28px; border-radius: 30px;
+    font-weight: 600; font-size: 1rem; text-decoration: none;
+    border: 2px solid rgba(255,255,255,0.5);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    display: inline-flex; align-items: center; gap: 8px;
+    position: relative; overflow: hidden;
+  }
+  .btn-secondary::after {
+    content: ''; position: absolute;
+    inset: 0; background: rgba(255,255,255,0.08);
+    transform: translateX(-100%) skewX(-15deg);
+    transition: transform 0.4s ease;
+  }
+  .btn-secondary:hover::after { transform: translateX(100%) skewX(-15deg); }
+  .btn-secondary:hover { background: rgba(255,255,255,0.15); border-color: white; transform: translateY(-3px) scale(1.04); box-shadow: 0 8px 24px rgba(255,255,255,0.15); letter-spacing: 0.5px; }
+  .btn-secondary:active { transform: scale(0.97); }
+
+  .hero-visual {
+    display: flex; flex-direction: column; gap: 14px;
+    position: relative; z-index: 1;
+  }
+  .form-card {
+    background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 14px;
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 14px;
+    animation: floatIn 0.6s ease both;
+    transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    cursor: pointer; position: relative; overflow: hidden;
+  }
+  .form-card::after {
+    content: ''; position: absolute;
+    inset: 0; background: rgba(255,255,255,0.08);
+    transform: translateX(-100%) skewX(-15deg);
+    transition: transform 0.5s ease;
+  }
+  .form-card:hover::after { transform: translateX(100%) skewX(-15deg); }
+  .form-card:hover {
+    background: rgba(255,255,255,0.22);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateX(-18px);
+    box-shadow: 6px 6px 24px rgba(0,0,0,0.25);
+  }
+  .form-card:active { transform: scale(0.98); }
+  .form-card:nth-child(2) { animation-delay: 0.1s; margin-left: 20px; }
+  .form-card:nth-child(3) { animation-delay: 0.2s; }
+  .form-card:nth-child(4) { animation-delay: 0.3s; margin-left: 20px; }
+  @keyframes floatIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .form-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+  }
+  .form-card-text { color: white; }
+  .form-card-text strong { display: block; font-size: 0.95rem; font-weight: 600; }
+  .form-card-text span { font-size: 0.78rem; opacity: 0.7; }
+  .badge-done {
+    margin-left: auto; background: var(--green); color: white;
+    font-size: 0.7rem; font-weight: 700; padding: 3px 10px;
+    border-radius: 20px; letter-spacing: 0.5px;
+  }
+
+  /* TRUST BAR */
+  .trust-bar {
+    background: var(--white); border-bottom: 1px solid var(--border);
+    padding: 18px 5%;
+    display: flex; justify-content: center; align-items: center;
+    gap: 40px; flex-wrap: wrap;
+  }
+  .trust-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.88rem; color: var(--text-mid); font-weight: 500;
+  }
+  .trust-icon { font-size: 1.2rem; }
+
+  /* SECTION */
+  section { padding: 70px 5%; }
+  .section-tag {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--saffron);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: 2.1rem; font-weight: 800; color: var(--text-dark);
+    margin-bottom: 12px; line-height: 1.2;
+  }
+  .section-sub {
+    color: var(--text-mid); font-size: 1rem;
+    max-width: 540px; margin-bottom: 44px;
+  }
+
+  /* SERVICES GRID */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 22px;
+  }
+  .service-card {
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: 16px; padding: 28px 24px;
+    transition: all 0.25s; cursor: default;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 4px;
+    background: var(--card-color, var(--saffron));
+    border-radius: 16px 16px 0 0;
+  }
+  .service-card:hover {
+    transform: translateX(-8px);
+    border-color: var(--card-color, var(--saffron));
+    box-shadow: 8px 8px 32px rgba(0,0,0,0.12);
+  }
+  .svc-icon {
+    font-size: 2rem; margin-bottom: 14px;
+    width: 54px; height: 54px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--card-bg, var(--saffron-light));
+  }
+  .service-card h3 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; color: var(--text-dark);
+  }
+  .service-card p { font-size: 0.88rem; color: var(--text-mid); line-height: 1.6; }
+  .service-card .price-tag {
+    margin-top: 14px; font-size: 0.8rem; font-weight: 600;
+    color: var(--card-color, var(--saffron));
+    background: var(--card-bg, var(--saffron-light));
+    display: inline-block; padding: 4px 12px; border-radius: 20px;
+  }
+
+  /* HOW IT WORKS */
+  .how-bg { background: var(--blue-light); }
+  .steps { display: flex; gap: 0; flex-wrap: wrap; position: relative; }
+  .steps::before {
+    content: ''; position: absolute;
+    top: 36px; left: 36px; right: 36px; height: 2px;
+    background: repeating-linear-gradient(90deg, var(--blue) 0, var(--blue) 12px, transparent 12px, transparent 20px);
+    z-index: 0;
+  }
+  .step {
+    flex: 1; min-width: 180px;
+    text-align: center; padding: 28px 20px;
+    position: relative; z-index: 1;
+  }
+  .step-num {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--blue); color: white;
+    font-family: 'Baloo 2', cursive; font-size: 1.4rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px; border: 3px solid var(--white);
+    box-shadow: 0 4px 12px rgba(10,61,145,0.3);
+  }
+  .step h4 { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+  .step p { font-size: 0.82rem; color: var(--text-mid); }
+
+  /* WHY US */
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+  .why-visual {
+    background: linear-gradient(135deg, var(--saffron-light), var(--blue-light));
+    border-radius: 20px; padding: 40px 30px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .stat-row { display: flex; gap: 16px; }
+  .stat-box {
+    flex: 1; background: var(--white); border-radius: 12px;
+    padding: 20px; text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .stat-box .num {
+    font-family: 'Baloo 2', cursive; font-size: 2rem; font-weight: 800; color: var(--blue);
+    display: block;
+  }
+  .stat-box .label { font-size: 0.78rem; color: var(--text-mid); font-weight: 500; }
+  .why-points { display: flex; flex-direction: column; gap: 18px; }
+  .why-point {
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .why-check {
+    width: 28px; height: 28px; flex-shrink: 0;
+    background: var(--green); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 0.9rem; font-weight: 700; margin-top: 2px;
+  }
+  .why-point h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 3px; }
+  .why-point p { font-size: 0.83rem; color: var(--text-mid); }
+
+  /* TESTIMONIALS */
+  .testimonials-bg { background: var(--white); }
+  .testi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 22px;
+  }
+  .testi-card {
+    border: 1.5px solid var(--border); border-radius: 16px;
+    padding: 24px; background: var(--bg);
+  }
+  .stars { color: var(--gold); font-size: 1rem; margin-bottom: 12px; }
+  .testi-text { font-size: 0.9rem; color: var(--text-mid); line-height: 1.65; margin-bottom: 16px; font-style: italic; }
+  .testi-author { display: flex; align-items: center; gap: 10px; }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--saffron); color: white;
+    font-weight: 700; font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .testi-author span { font-size: 0.83rem; font-weight: 600; }
+  .testi-author small { display: block; font-size: 0.75rem; color: var(--text-light); }
+
+  /* CONTACT */
+  #contact { background: var(--text-dark); }
+  #contact .section-tag { color: var(--saffron-mid); }
+  #contact .section-title { color: white; }
+  #contact .section-sub { color: rgba(255,255,255,0.65); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: start; }
+  .contact-form {
+    background: var(--white); border-radius: 20px;
+    padding: 36px;
+  }
+  .contact-form h3 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.3rem; font-weight: 700; margin-bottom: 22px; color: var(--text-dark);
+  }
+  .form-row { display: flex; flex-direction: column; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 0.82rem; font-weight: 600; color: var(--text-mid); }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 11px 14px; border: 1.5px solid var(--border);
+    border-radius: 10px; font-size: 0.9rem; font-family: inherit;
+    color: var(--text-dark); background: var(--bg);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--saffron);
+  }
+  .form-group textarea { min-height: 90px; resize: vertical; }
+  .submit-btn {
+    width: 100%; padding: 14px;
+    background: var(--saffron); color: white;
+    border: none; border-radius: 30px;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    font-family: inherit; margin-top: 6px;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative; overflow: hidden;
+  }
+  .submit-btn::after {
+    content: ''; position: absolute;
+    inset: 0; background: rgba(255,255,255,0.2);
+    transform: translateX(-100%) skewX(-15deg);
+    transition: transform 0.4s ease;
+  }
+  .submit-btn:hover::after { transform: translateX(100%) skewX(-15deg); }
+  .submit-btn:hover { background: #e05500; transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 24px rgba(255,107,0,0.4); letter-spacing: 0.5px; }
+  .submit-btn:active { transform: scale(0.97); }
+
+  .contact-info { color: rgba(255,255,255,0.9); }
+  .contact-info h3 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.6rem; font-weight: 700; margin-bottom: 20px;
+  }
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    margin-bottom: 22px;
+  }
+  .c-icon {
+    width: 42px; height: 42px; border-radius: 10px; flex-shrink: 0;
+    background: rgba(255,107,0,0.15); display: flex;
+    align-items: center; justify-content: center; font-size: 1.2rem;
+  }
+  .c-label { font-size: 0.8rem; opacity: 0.6; margin-bottom: 2px; }
+  .c-val { font-weight: 600; font-size: 1rem; }
+  .whatsapp-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #25D366; color: white;
+    padding: 13px 26px; border-radius: 30px;
+    font-weight: 700; font-size: 0.95rem; text-decoration: none;
+    margin-top: 10px; transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative; overflow: hidden;
+  }
+  .whatsapp-btn::after {
+    content: ''; position: absolute;
+    inset: 0; background: rgba(255,255,255,0.2);
+    transform: translateX(-100%) skewX(-15deg);
+    transition: transform 0.4s ease;
+  }
+  .whatsapp-btn:hover::after { transform: translateX(100%) skewX(-15deg); }
+  .whatsapp-btn:hover { background: #1dba58; transform: translateY(-3px) scale(1.04); box-shadow: 0 10px 28px rgba(37,211,102,0.4); letter-spacing: 0.3px; }
+  .whatsapp-btn:active { transform: scale(0.97); }
+
+  /* FOOTER */
+  footer {
+    background: #0D0D1F; color: rgba(255,255,255,0.55);
+    text-align: center; padding: 24px 5%; font-size: 0.82rem;
+  }
+  footer strong { color: var(--saffron); }
+
+  /* TRICOLOR STRIP */
+  .tricolor { height: 5px; display: flex; }
+  .tricolor span { flex: 1; }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    .hero { grid-template-columns: 1fr; padding: 48px 5% 60px; }
+    .hero h1 { font-size: 2.1rem; }
+    .hero-visual { display: none; }
+    .why-grid, .contact-grid { grid-template-columns: 1fr; }
+    nav ul { display: none; }
+    .steps::before { display: none; }
+    .stat-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TRICOLOR TOP STRIP -->
+<div class="tricolor">
+  <span style="background:#FF6B00;"></span>
+  <span style="background:#FFFFFF; border-top:1px solid #ddd;"></span>
+  <span style="background:#138808;"></span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">
+    <div class="logo-icon">📋</div>
+    <div>
+      Form<span>Seva</span>
+      <div style="font-size:0.55rem; font-weight:500; color:var(--text-mid); letter-spacing:0.5px; margin-top:-4px;">V K</div>
+    </div>
+  </a>
+  <ul>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact" class="nav-cta">Contact Now</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div style="position:relative;z-index:1;">
+    <div class="hero-badge">🇮🇳 Professional Form Filling Service</div>
+    <h1>Your One-Stop<em>Online Form Seva</em></h1>
+    <p>Government schemes, scholarships, jobs, elections, PAN card, college admissions — we fill every form accurately, fast, and hassle-free. Just contact us!</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">📞 Contact Us Now</a>
+      <a href="#services" class="btn-secondary">View Services ↓</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="form-card">
+      <div class="form-icon" style="background:rgba(19,136,8,0.2);">🏛️</div>
+      <div class="form-card-text">
+        <strong>Government Schemes</strong>
+        <span>PM Awas, Ration Card & more</span>
+      </div>
+      <span class="badge-done">✓ Done</span>
+    </div>
+    <div class="form-card">
+      <div class="form-icon" style="background:rgba(255,107,0,0.2);">🎓</div>
+      <div class="form-card-text">
+        <strong>Scholarship Forms</strong>
+        <span>Mahadbt, EBC, OBC & more</span>
+      </div>
+      <span class="badge-done">✓ Done</span>
+    </div>
+    <div class="form-card">
+      <div class="form-icon" style="background:rgba(10,61,145,0.2);">💼</div>
+      <div class="form-card-text">
+        <strong>Job Applications</strong>
+        <span>Govt & private job forms</span>
+      </div>
+      <span class="badge-done">✓ Done</span>
+    </div>
+    <div class="form-card">
+      <div class="form-icon" style="background:rgba(212,160,23,0.2);">🪪</div>
+      <div class="form-card-text">
+        <strong>PAN Card / Aadhaar</strong>
+        <span>New & corrections</span>
+      </div>
+      <span class="badge-done">✓ Done</span>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><span class="trust-icon">✅</span> 100% Accurate Submissions</div>
+  <div class="trust-item"><span class="trust-icon">⚡</span> Same Day Service</div>
+  <div class="trust-item"><span class="trust-icon">🔒</span> Documents Safe & Secure</div>
+  <div class="trust-item"><span class="trust-icon">💬</span> WhatsApp Support Available</div>
+
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-tag">Our Services</div>
+  <h2 class="section-title">Forms We Fill For You</h2>
+  <p class="section-sub">From government schemes to college admissions — we handle all types of online forms accurately and on time.</p>
+  <div class="services-grid">
+    <div class="service-card" style="--card-color:#FF6B00; --card-bg:#FFF3EA;">
+      <div class="svc-icon">🏛️</div>
+      <h3>Government Scheme Forms</h3>
+      <p>PM Awas Yojana, Ration Card, Ayushman Bharat, Jan Dhan Yojana, and all state & central government schemes.</p>
+      <span class="price-tag">Most Popular</span>
+    </div>
+    <div class="service-card" style="--card-color:#138808; --card-bg:#E6F4E6;">
+      <div class="svc-icon">🎓</div>
+      <h3>Scholarship Forms</h3>
+      <p>MahaDBT, EBC, OBC, SC/ST, Merit-based scholarships, Post-matric and Pre-matric scholarship applications.</p>
+      <span class="price-tag">Students Benefit</span>
+    </div>
+    <div class="service-card" style="--card-color:#0A3D91; --card-bg:#E8EEF8;">
+      <div class="svc-icon">💼</div>
+      <h3>Job Application Forms</h3>
+      <p>Government job applications, MPSC, UPSC, Railways, Police Bharti, private company forms and registration.</p>
+      <span class="price-tag">Career Forms</span>
+    </div>
+    <div class="service-card" style="--card-color:#8B1A8B; --card-bg:#F5E6F5;">
+      <div class="svc-icon">🗳️</div>
+      <h3>Election / Voter Forms</h3>
+      <p>Voter ID registration, corrections, Form 6, 7, 8 filling, new voter enrollment and address change forms.</p>
+      <span class="price-tag">Your Right to Vote</span>
+    </div>
+    <div class="service-card" style="--card-color:#D4A017; --card-bg:#FDF6E3;">
+      <div class="svc-icon">🪪</div>
+      <h3>PAN Card Forms</h3>
+      <p>New PAN card application, corrections, duplicate PAN, Aadhaar-PAN linking and online submission.</p>
+      <span class="price-tag">Identity Docs</span>
+    </div>
+    <div class="service-card" style="--card-color:#C0392B; --card-bg:#FDEDEC;">
+      <div class="svc-icon">🏫</div>
+      <h3>College Admission Forms</h3>
+      <p>Online admission forms for engineering, medical, arts, commerce — CET, CAP round and direct admission.</p>
+      <span class="price-tag">Higher Education</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="how-bg">
+  <div style="text-align:center;">
+    <div class="section-tag">Simple Process</div>
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub" style="margin:0 auto 44px;">Just 4 easy steps to get your form filled professionally.</p>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h4>📞 Contact Us</h4>
+      <p>Call, WhatsApp, or fill our online contact form with your requirement.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h4>📄 Share Documents</h4>
+      <p>Share required documents via WhatsApp or visit us in person.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h4>✍️ We Fill the Form</h4>
+      <p>Our expert carefully fills your form with 100% accuracy.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h4>✅ Done!</h4>
+      <p>Form submitted. We share acknowledgement receipt with you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews" style="background:var(--white);">
+  <div style="text-align:center;">
+    <div class="section-tag">Customer Reviews</div>
+    <h2 class="section-title">What Our Customers Say</h2>
+    <p class="section-sub" style="margin:0 auto 44px; text-align:center;">Real reviews from real people. Share your experience with us!</p>
+  </div>
+
+  <!-- WRITE A REVIEW BOX -->
+  <div style="max-width:600px; margin:0 auto 48px; background:var(--bg); border:1.5px solid var(--border); border-radius:20px; padding:32px;">
+    <h3 style="font-family:'Baloo 2',cursive; font-size:1.2rem; font-weight:700; margin-bottom:20px; color:var(--text-dark);">✍️ Write Your Review</h3>
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div class="form-group">
+          <label>Your Name *</label>
+          <input type="text" id="rev-name" placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label>Your City</label>
+          <input type="text" id="rev-city" placeholder="e.g. Pune">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Rating *</label>
+        <div id="star-selector" style="display:flex; gap:8px; margin-top:4px;">
+          <span class="star-btn" data-val="1" style="font-size:1.8rem; cursor:pointer; opacity:0.3;">★</span>
+          <span class="star-btn" data-val="2" style="font-size:1.8rem; cursor:pointer; opacity:0.3;">★</span>
+          <span class="star-btn" data-val="3" style="font-size:1.8rem; cursor:pointer; opacity:0.3;">★</span>
+          <span class="star-btn" data-val="4" style="font-size:1.8rem; cursor:pointer; opacity:0.3;">★</span>
+          <span class="star-btn" data-val="5" style="font-size:1.8rem; cursor:pointer; opacity:0.3;">★</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Your Review *</label>
+        <textarea id="rev-text" placeholder="Tell others about your experience..." style="min-height:100px; resize:vertical;"></textarea>
+      </div>
+      <button class="submit-btn" id="submit-review-btn" style="margin-top:0;" onclick="submitReview()">
+        ⭐ Submit My Review
+      </button>
+    </div>
+  </div>
+
+  <!-- REVIEWS DISPLAY -->
+  <div id="reviews-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:22px; max-width:1000px; margin:0 auto;"></div>
+  <p id="no-reviews-msg" style="text-align:center; color:var(--text-light); font-size:0.9rem; margin-top:10px;">No reviews yet. Be the first to share your experience! 🙏</p>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-tag">Get In Touch</div>
+  <h2 class="section-title">Contact Us Today</h2>
+  <p class="section-sub">Have a form to fill? Reach out now and we'll get it done for you quickly!</p>
+  <div class="contact-grid">
+    <div class="contact-form">
+      <h3>📋 Send Us Your Enquiry</h3>
+      <div class="form-row">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div class="form-group">
+            <label>Your Name *</label>
+            <input type="text" id="enq-name" placeholder="Full Name">
+          </div>
+          <div class="form-group">
+            <label>Mobile Number *</label>
+            <input type="tel" id="enq-phone" placeholder="WhatsApp number">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Which Form Do You Need?</label>
+          <select id="enq-formtype">
+            <option value="">-- Select Form Type --</option>
+            <option>Government Scheme Form</option>
+            <option>Scholarship Form</option>
+            <option>Job Application Form</option>
+            <option>Election / Voter ID Form</option>
+            <option>PAN Card Form</option>
+            <option>College Admission Form</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your City / Village</label>
+          <input type="text" id="enq-city" placeholder="Where are you from?">
+        </div>
+        <div class="form-group">
+          <label>Any Message or Details</label>
+          <textarea id="enq-message" placeholder="Tell us more about your requirement..."></textarea>
+        </div>
+        <button class="submit-btn" id="enq-submit-btn" onclick="submitEnquiry()">
+          ✅ Submit Enquiry
+        </button>
+        <div id="enq-status" style="text-align:center; font-size:0.88rem; margin-top:8px; display:none;"></div>
+      </div>
+    </div>
+    <div class="contact-info">
+    
+      <div class="contact-item">
+        
+        <div>
+      
+          
+        </div>
+      </div>
+     
+        
+        <div>
+          
+          
+        </div>
+      </div>
+
+      <div class="contact-item">
+       
+        <div>
+         
+        </div>
+      </div>
+      <div class="contact-item">
+        
+        <div>
+          <div class="c-label">Email</div>
+          <div class="c-val">formseva18@gmail.com</div>
+        </div>
+      </div>
+    
+      <p style="margin-top:20px; font-size:0.82rem; opacity:0.55; line-height:1.6;">
+        🔒 Your documents and personal information are fully safe with us. We never share your data with anyone.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <strong>FormSeva</strong> — Professional Online Form Filling Services</p>
+  <p style="margin-top:6px; color:rgba(255,255,255,0.75);">Run by <strong style="color:var(--saffron);">Virendra D K</strong> — Made with ❤️ to help every Indian citizen access their rights</p>
+</footer>
+
+<!-- TRICOLOR BOTTOM STRIP -->
+<div class="tricolor">
+  <span style="background:#FF6B00;"></span>
+  <span style="background:#FFFFFF; border-bottom:1px solid #ddd;"></span>
+  <span style="background:#138808;"></span>
+</div>
+
+<script>
+  // ─── EmailJS Setup ───────────────────────────────────────────────
+  // STEP 1: Go to https://www.emailjs.com and create a free account
+  // STEP 2: Add a Gmail service (formseva18@gmail.com), copy your Service ID below
+  // STEP 3: Create an email template, copy your Template ID below
+  // STEP 4: Copy your Public Key from Account > API Keys below
+  var EMAILJS_SERVICE_ID  = 'service_3mheya7';
+  var EMAILJS_TEMPLATE_ID = 'template_dzeodql';
+  var EMAILJS_PUBLIC_KEY  = 'R3v_3dvP1viJuvkqV';
+
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+
+  function submitEnquiry() {
+    var name     = document.getElementById('enq-name').value.trim();
+    var phone    = document.getElementById('enq-phone').value.trim();
+    var formtype = document.getElementById('enq-formtype').value;
+    var city     = document.getElementById('enq-city').value.trim();
+    var message  = document.getElementById('enq-message').value.trim();
+    var status   = document.getElementById('enq-status');
+    var btn      = document.getElementById('enq-submit-btn');
+
+    if (!name)  { alert('Please enter your name.'); return; }
+    if (!phone) { alert('Please enter your mobile number.'); return; }
+    if (!formtype) { alert('Please select a form type.'); return; }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Sending...';
+    status.style.display = 'none';
+
+    var templateParams = {
+      from_name: name,
+      phone:     phone,
+      form_type: formtype,
+      city:      city || 'Not provided',
+      message:   message || 'No additional message',
+      to_email:  'formseva18@gmail.com'
+    };
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+      .then(function() {
+        status.style.display = 'block';
+        status.style.color = 'var(--green)';
+        status.textContent = '🙏 Enquiry sent! We will contact you soon on WhatsApp.';
+        btn.textContent = '✅ Submit Enquiry';
+        btn.disabled = false;
+        document.getElementById('enq-name').value = '';
+        document.getElementById('enq-phone').value = '';
+        document.getElementById('enq-formtype').value = '';
+        document.getElementById('enq-city').value = '';
+        document.getElementById('enq-message').value = '';
+      }, function(error) {
+        status.style.display = 'block';
+        status.style.color = '#C0392B';
+        status.textContent = '❌ Failed to send. Please WhatsApp us directly at 9156837080.';
+        btn.textContent = '✅ Submit Enquiry';
+        btn.disabled = false;
+        console.error('EmailJS error:', error);
+      });
+  }
+  // ─── JSONBin Reviews (shared for all visitors) ───────────────────
+  var BIN_ID  = '6a250aa5da38895dfe93a25a';
+  var BIN_KEY = '$2a$10$OuJ9/UScWqP2nJSRJLx6iucK6D.zrTRBxHez6jMKOXI1midEsJCyi';
+  var BIN_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
+
+  var selectedStars = 0;
+  var avatarColors = ['var(--saffron)','var(--blue)','var(--green)','#8B1A8B','#C0392B','#D4A017'];
+
+  function renderReviews(reviews) {
+    var container = document.getElementById('reviews-container');
+    var noMsg = document.getElementById('no-reviews-msg');
+    container.innerHTML = '';
+    if (!reviews || reviews.length === 0) { noMsg.style.display = 'block'; return; }
+    noMsg.style.display = 'none';
+    reviews.slice().reverse().forEach(function(r, i) {
+      var initials = r.name.trim().split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+      var color = avatarColors[i % avatarColors.length];
+      var stars = '';
+      for(var s=1;s<=5;s++) stars += s<=r.rating ? '★' : '☆';
+      var card = document.createElement('div');
+      card.className = 'testi-card';
+      card.innerHTML =
+        '<div class="stars" style="color:var(--gold);">' + stars + '</div>' +
+        '<p class="testi-text">"' + r.text.replace(/</g,'&lt;') + '"</p>' +
+        '<div class="testi-author">' +
+          '<div class="avatar" style="background:' + color + ';">' + initials + '</div>' +
+          '<div><span>' + r.name.replace(/</g,'&lt;') + '</span>' +
+          (r.city ? '<small>' + r.city.replace(/</g,'&lt;') + '</small>' : '') +
+          (r.date ? '<small style="color:var(--text-light);">' + r.date + '</small>' : '') +
+          '</div></div>';
+      container.appendChild(card);
+    });
+  }
+
+  function loadReviews() {
+    var noMsg = document.getElementById('no-reviews-msg');
+    noMsg.textContent = '⏳ Loading reviews...';
+    noMsg.style.display = 'block';
+    fetch(BIN_URL + '/latest', {
+      headers: { 'X-Master-Key': BIN_KEY }
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var reviews = (data.record && data.record.reviews) ? data.record.reviews : [];
+      renderReviews(reviews);
+    })
+    .catch(function(){
+      noMsg.textContent = 'Could not load reviews. Please refresh.';
+      noMsg.style.display = 'block';
+    });
+  }
+
+  document.querySelectorAll('.star-btn').forEach(function(btn) {
+    btn.addEventListener('mouseenter', function() {
+      var val = parseInt(this.dataset.val);
+      document.querySelectorAll('.star-btn').forEach(function(s,i){ s.style.opacity = i<val?'1':'0.3'; s.style.color=i<val?'var(--gold)':''; });
+    });
+    btn.addEventListener('mouseleave', function() {
+      document.querySelectorAll('.star-btn').forEach(function(s,i){ s.style.opacity = i<selectedStars?'1':'0.3'; s.style.color=i<selectedStars?'var(--gold)':''; });
+    });
+    btn.addEventListener('click', function() {
+      selectedStars = parseInt(this.dataset.val);
+      document.querySelectorAll('.star-btn').forEach(function(s,i){ s.style.opacity = i<selectedStars?'1':'0.3'; s.style.color=i<selectedStars?'var(--gold)':''; });
+    });
+  });
+
+  function submitReview() {
+    var name = document.getElementById('rev-name').value.trim();
+    var city = document.getElementById('rev-city').value.trim();
+    var text = document.getElementById('rev-text').value.trim();
+    var btn  = document.getElementById('submit-review-btn');
+    if (!name) { alert('Please enter your name.'); return; }
+    if (!selectedStars) { alert('Please select a star rating.'); return; }
+    if (!text) { alert('Please write your review.'); return; }
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Submitting...';
+
+    // First fetch existing reviews
+    fetch(BIN_URL + '/latest', { headers: { 'X-Master-Key': BIN_KEY } })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var existing = (data.record && data.record.reviews) ? data.record.reviews : [];
+      existing.push({ name: name, city: city, rating: selectedStars, text: text, date: new Date().toLocaleDateString('en-IN') });
+      // Save updated reviews back
+      return fetch(BIN_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': BIN_KEY },
+        body: JSON.stringify({ reviews: existing })
+      });
+    })
+    .then(function(){ 
+      document.getElementById('rev-name').value = '';
+      document.getElementById('rev-city').value = '';
+      document.getElementById('rev-text').value = '';
+      selectedStars = 0;
+      document.querySelectorAll('.star-btn').forEach(function(s){ s.style.opacity='0.3'; s.style.color=''; });
+      btn.textContent = '⭐ Submit My Review';
+      btn.disabled = false;
+      alert('🙏 Thank you! Your review is now visible to everyone.');
+      loadReviews();
+    })
+    .catch(function(){
+      alert('❌ Could not submit review. Please try again.');
+      btn.textContent = '⭐ Submit My Review';
+      btn.disabled = false;
+    });
+  }
+
+  loadReviews();
+</script>
+</body>
+</html>
